@@ -33,4 +33,9 @@ def scaled_dot_product_attention(
     return output, attention_weights
 
 
+class MultiHeadAttention(nn.Module):
+
+    def __init__(self, d_model: int, num_heads:int, d_k: int, d_v: int):
+        
+
 
