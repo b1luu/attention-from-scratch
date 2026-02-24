@@ -95,4 +95,9 @@ class MultiHeadAttention(nn.Module):
         d_k = self.d_k
         return x.view(batch_size, seq_len, num_heads, d_k).transpose(1, 2)
 
-        
+
+    def _merge_heads(self, x: torch.Tensor) -> torch.Tensor:
+        """
+        Merge the last dimension into (num_heads, d_k).
+        Reshape to (batch_size, seq_len, d_model).
+        Return the reshaped tensor.
