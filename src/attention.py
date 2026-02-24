@@ -121,4 +121,5 @@ class MultiHeadAttention(nn.Module):
         Args:
             x: Input tensor of shape (batch_size, num_heads, seq_len, d_k)
         """
+        batch_size = x.shape[0]
     
