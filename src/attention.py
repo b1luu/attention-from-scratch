@@ -109,3 +109,12 @@ class MultiHeadAttention(nn.Module):
         num_heads = self.num_heads
         d_k = self.d_k
         return x.transpose(1, 2).contiguous().view(batch_size, seq_len, num_heads * d_k)
+
+    def _project_heads(self, x: torch.Tensor) -> torch.Tensor:
+        """
+        Project the last dimension into (d_model).
+        Return the projected tensor.
+        Args:
+            x: Input tensor of shape (batch_size, num_heads, seq_len, d_k)
+        """
+    
