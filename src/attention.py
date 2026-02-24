@@ -68,4 +68,22 @@ class MultiHeadAttention(nn.Module):
         W_Q = self.W_Q(Q)
         W_K = self.W_K(K)
         W_V = self.W_V(V)
-        
+
+        Q = W_Q.view(batch_size, seq_len, num_heads, d_k).transpose(1, 2)
+        K = W_K.view(batch_size, seq_len, num_heads, d_k).transpose(1, 2)
+        V = W_V.view(batch_size, seq_len, num_heads, d_v).transpose(1, 2)
+
+        output, attention_weights = scaled_dot_product_attention(Q, K, V, mask)
+
+        output = output.transpose(1, 2).contiguous().view(batch_size, seq_len, d_model)
+        output = self.W_O(output)
+        return output, attention_weights
+    
+    def _split_heads(self, x: torch.Tensor) -> torch.Tensor:
+        """
+        Split the last dimension into (num_heads, d_k).
+
+        Args:
+            x: Input tensor of shape (batch_size, seq_len, d_model)
+        """
+
