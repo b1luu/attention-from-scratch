@@ -82,6 +82,8 @@ class MultiHeadAttention(nn.Module):
     def _split_heads(self, x: torch.Tensor) -> torch.Tensor:
         """
         Split the last dimension into (num_heads, d_k).
+        Reshape to (batch_size, num_heads, seq_len, d_k).
+        Return the reshaped tensor.
 
         Args:
             x: Input tensor of shape (batch_size, seq_len, d_model)
