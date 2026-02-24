@@ -98,6 +98,7 @@ class MultiHeadAttention(nn.Module):
 
     def _merge_heads(self, x: torch.Tensor) -> torch.Tensor:
         """
+        The purpose of this function is to merge the heads back into the original dimension.
         Merge the last dimension into (num_heads, d_k).
         Reshape to (batch_size, seq_len, d_model).
         Return the reshaped tensor.
