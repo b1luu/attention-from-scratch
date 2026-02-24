@@ -36,5 +36,22 @@ def scaled_dot_product_attention(
 class MultiHeadAttention(nn.Module):
 
     def __init__(self, d_model: int, num_heads:int):
-     
+        super().__init__()
+        self.d_model = d_model
+        self.num_heads = num_heads
+        self.d_k = d_model // num_heads
+        self.d_v = d_model // num_heads
+        self.W_Q = nn.Linear(d_model, d_k * num_heads)
+        self.W_K = nn.Linear(d_model, d_k * num_heads)
+        self.W_V = nn.Linear(d_model, d_v * num_heads)
+        self.W_O = nn.Linear(d_v * num_heads, d_model)
 
+    def forward(self, Q: torch.Tensor, K: torch.Tensor, V: torch.Tensor, mask: torch.Tensor = None) -> torch.Tensor:
+        """
+        Forward pass for multi-head attention.
+
+        Args:
+            Q: Query tensor of shape (batch_size, seq_len, d_model)
+            K: Key tensor of shape (batch_size, seq_len, d_model)
+            V: Value tensor of shape (batch_size, seq_len, d_model)
+            mask: Optional boolean mask of shape (batch_size, seq_len, seq_len)
