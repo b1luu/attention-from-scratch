@@ -114,6 +114,9 @@ class MultiHeadAttention(nn.Module):
         """
         Project the last dimension into (d_model).
         Return the projected tensor.
+        Reshape to (batch_size, seq_len, d_model).
+        The purpose of this function is to project the heads back to the original dimension.
+        It is used to combine the heads back into the original dimension.
         Args:
             x: Input tensor of shape (batch_size, num_heads, seq_len, d_k)
         """
