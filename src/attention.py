@@ -55,3 +55,17 @@ class MultiHeadAttention(nn.Module):
             K: Key tensor of shape (batch_size, seq_len, d_model)
             V: Value tensor of shape (batch_size, seq_len, d_model)
             mask: Optional boolean mask of shape (batch_size, seq_len, seq_len)
+
+        Returns:
+            Output tensor of shape (batch_size, seq_len, d_model)
+        """
+        batch_size = Q.shape[0]
+        seq_len = Q.shape[1]
+        d_model = Q.shape[2]
+        num_heads = self.num_heads
+        d_k = self.d_k
+        d_v = self.d_v
+        W_Q = self.W_Q(Q)
+        W_K = self.W_K(K)
+        W_V = self.W_V(V)
+        
