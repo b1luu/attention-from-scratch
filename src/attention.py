@@ -88,4 +88,11 @@ class MultiHeadAttention(nn.Module):
         Args:
             x: Input tensor of shape (batch_size, seq_len, d_model)
         """
+        batch_size = x.shape[0]
+        seq_len = x.shape[1]
+        d_model = x.shape[2]
+        num_heads = self.num_heads
+        d_k = self.d_k
+        return x.view(batch_size, seq_len, num_heads, d_k).transpose(1, 2)
 
+        
