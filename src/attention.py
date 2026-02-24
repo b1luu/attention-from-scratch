@@ -101,3 +101,7 @@ class MultiHeadAttention(nn.Module):
         Merge the last dimension into (num_heads, d_k).
         Reshape to (batch_size, seq_len, d_model).
         Return the reshaped tensor.
+        Args:
+            x: Input tensor of shape (batch_size, num_heads, seq_len, d_k)
+        """
+        batch_size = x.shape[0]
