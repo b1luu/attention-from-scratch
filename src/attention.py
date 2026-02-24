@@ -24,5 +24,10 @@ Returns:
 """
 
     d_k = Q.shape[-1]
-    
+    scores = torch.matmul(Q, K.transpose(-2, -1)) / math.sqrt(d_k)
+    if mask is not None:
+        scores = scores.masked_fill(mask == 0, -1e9)
+    attention_weights = F.softmax(scores, dim=-1)
+    output = torch.matmul(attention_weights, V)
+    return attention_weights, output
 
