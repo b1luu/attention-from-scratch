@@ -36,17 +36,5 @@ def scaled_dot_product_attention(
 class MultiHeadAttention(nn.Module):
 
     def __init__(self, d_model: int, num_heads:int):
-        super().__init__()
-        self.d_model = d_model
-        self.num_heads = num_heads
-        self.d_k = d_k
-        self.d_v = d_v
-        self.W_Q = nn.Linear(d_model, d_k * num_heads)
-        self.W_K = nn.Linear(d_model, d_k * num_heads)
-        self.W_V = nn.Linear(d_model, d_v * num_heads)
-        self.W_O = nn.Linear(d_v * num_heads, d_model)
-        self.dropout = nn.Dropout(dropout)
-        self.scale = 1 / math.sqrt(d_k)
-
-
+     
 
