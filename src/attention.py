@@ -22,3 +22,7 @@ Args:
 Returns:
     tuple[torch.Tensor, torch.Tensor]: Tuple containing the attention weights and the output tensor
 """
+
+    d_k = Q.shape[-1]
+    
+
