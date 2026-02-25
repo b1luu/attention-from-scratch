@@ -24,7 +24,7 @@ def scaled_dot_product_attention(
         output:            Shape (batch_size, num_heads, seq_len, d_v)
         attention_weights: Shape (batch_size, num_heads, seq_len, seq_len)
     """
-
+    #d_k is vector size 
     d_k = Q.shape[-1]
     scores = torch.matmul(Q, K.transpose(-2, -1)) / math.sqrt(d_k)
     if mask is not None:
