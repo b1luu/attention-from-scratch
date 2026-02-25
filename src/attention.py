@@ -12,7 +12,7 @@ def scaled_dot_product_attention(
 ) -> tuple[torch.Tensor, torch.Tensor]:
     """
     Scaled dot-product attention with optional masking.
-
+    Each arg is going to be a matrix 
     Args:
         Q: Query tensor of shape (batch_size, num_heads, seq_len, d_k)
         K: Key tensor of shape (batch_size, num_heads, seq_len, d_k)
