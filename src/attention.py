@@ -3,6 +3,7 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 
+#torch.Tensor allows for GPU acceleration compared to other imports 
 def scaled_dot_product_attention(
     Q: torch.Tensor,
     K: torch.Tensor,
@@ -122,4 +123,5 @@ class MultiHeadAttention(nn.Module):
             x: Input tensor of shape (batch_size, num_heads, seq_len, d_k)
         """
         batch_size = x.shape[0]
-    
+
+        
