@@ -42,10 +42,10 @@ class MultiHeadAttention(nn.Module):
         self.num_heads = num_heads
         self.d_k = d_model // num_heads
         self.d_v = d_model // num_heads
-        self.W_Q = nn.Linear(d_model, d_k * num_heads)
-        self.W_K = nn.Linear(d_model, d_k * num_heads)
-        self.W_V = nn.Linear(d_model, d_v * num_heads)
-        self.W_O = nn.Linear(d_v * num_heads, d_model)
+        self.W_Q = nn.Linear(d_model, d_model)
+        self.W_K = nn.Linear(d_model, d_model)
+        self.W_V = nn.Linear(d_model, d_model)
+        self.W_O = nn.Linear(d_model, d_model)
 
     def forward(self, Q: torch.Tensor, K: torch.Tensor, V: torch.Tensor, mask: torch.Tensor = None) -> torch.Tensor:
         """
@@ -111,17 +111,3 @@ class MultiHeadAttention(nn.Module):
         num_heads = self.num_heads
         d_k = self.d_k
         return x.transpose(1, 2).contiguous().view(batch_size, seq_len, num_heads * d_k)
-
-    def _project_heads(self, x: torch.Tensor) -> torch.Tensor:
-        """
-        Project the last dimension into (d_model).
-        Return the projected tensor.
-        Reshape to (batch_size, seq_len, d_model).
-        The purpose of this function is to project the heads back to the original dimension.
-        It is used to combine the heads back into the original dimension.
-        Args:
-            x: Input tensor of shape (batch_size, num_heads, seq_len, d_k)
-        """
-        batch_size = x.shape[0]
-
-        
