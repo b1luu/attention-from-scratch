@@ -2,7 +2,7 @@ import torch
 import sys
 import os
 
-sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', 'src'))
 from attention import MultiHeadAttention
 
 def test_multi_head_attention():
@@ -21,3 +21,4 @@ def test_multi_head_attention():
 
 if __name__ == "__main__":
     test_multi_head_attention()
+
