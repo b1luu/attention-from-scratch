@@ -1,9 +1,8 @@
-import math 
+import math
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
 
-#torch.Tensor allows for GPU acceleration compared to other imports 
 def scaled_dot_product_attention(
     Q: torch.Tensor,
     K: torch.Tensor,
@@ -12,7 +11,7 @@ def scaled_dot_product_attention(
 ) -> tuple[torch.Tensor, torch.Tensor]:
     """
     Scaled dot-product attention with optional masking.
-    Each arg is going to be a matrix 
+
     Args:
         Q: Query tensor of shape (batch_size, num_heads, seq_len, d_k)
         K: Key tensor of shape (batch_size, num_heads, seq_len, d_k)
@@ -24,7 +23,6 @@ def scaled_dot_product_attention(
         output:            Shape (batch_size, num_heads, seq_len, d_v)
         attention_weights: Shape (batch_size, num_heads, seq_len, seq_len)
     """
-    #d_k is vector size 
     assert Q.shape[-1] == K.shape[-1], \
         f"Q and K must have the same last dimension (d_k), got {Q.shape[-1]} and {K.shape[-1]}"
     assert K.shape[-2] == V.shape[-2], \
@@ -52,13 +50,12 @@ class MultiHeadAttention(nn.Module):
         self.d_model = d_model
         self.num_heads = num_heads
         self.d_k = d_model // num_heads
-        self.d_v = d_model // num_heads
         self.W_Q = nn.Linear(d_model, d_model)
         self.W_K = nn.Linear(d_model, d_model)
         self.W_V = nn.Linear(d_model, d_model)
         self.W_O = nn.Linear(d_model, d_model)
 
-    def forward(self, Q: torch.Tensor, K: torch.Tensor, V: torch.Tensor, mask: torch.Tensor = None) -> torch.Tensor:
+    def forward(self, Q: torch.Tensor, K: torch.Tensor, V: torch.Tensor, mask: torch.Tensor = None) -> tuple[torch.Tensor, torch.Tensor]:
         """
         Forward pass for multi-head attention.
 
@@ -94,12 +91,14 @@ class MultiHeadAttention(nn.Module):
     
     def _split_heads(self, x: torch.Tensor) -> torch.Tensor:
         """
-        Split the last dimension into (num_heads, d_k).
-        Reshape to (batch_size, num_heads, seq_len, d_k).
-        Return the reshaped tensor.
+        Reshape (batch_size, seq_len, d_model) → (batch_size, num_heads, seq_len, d_k)
+        so each head gets its own slice of the embedding dimension.
 
         Args:
-            x: Input tensor of shape (batch_size, seq_len, d_model)
+            x: Shape (batch_size, seq_len, d_model)
+
+        Returns:
+            Shape (batch_size, num_heads, seq_len, d_k)
         """
         batch_size, seq_len, _ = x.shape
         return x.view(batch_size, seq_len, self.num_heads, self.d_k).transpose(1, 2)
