@@ -13,3 +13,11 @@ def test_multi_head_attention():
     Q = torch.randn(batch_size, seq_len, d_model)
     K = torch.randn(batch_size, seq_len, d_model)
     V = torch.randn(batch_size, seq_len, d_model)
+
+    attention = MultiHeadAttention(d_model, num_heads)
+    output, attention_weights = attention(Q, K, V)
+    print(output.shape)
+    print(attention_weights.shape)
+
+if __name__ == "__main__":
+    test_multi_head_attention()
