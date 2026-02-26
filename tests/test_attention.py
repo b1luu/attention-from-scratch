@@ -1,0 +1,15 @@
+import torch 
+import sys
+import os
+
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+from attention import MultiHeadAttention
+
+def test_multi_head_attention():
+    d_model = 128
+    num_heads = 8
+    seq_len = 10
+    batch_size = 4
+    Q = torch.randn(batch_size, seq_len, d_model)
+    K = torch.randn(batch_size, seq_len, d_model)
+    V = torch.randn(batch_size, seq_len, d_model)
