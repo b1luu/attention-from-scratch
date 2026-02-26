@@ -16,7 +16,7 @@ def test_multi_head_attention():
 
     attention = MultiHeadAttention(d_model, num_heads)
     output, attention_weights = attention(Q, K, V)
-    print(output.shape)
+    assert output.shape == (batch_size, seq_len, d_model)
     print(attention_weights.shape)
 
 if __name__ == "__main__":
