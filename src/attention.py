@@ -82,26 +82,15 @@ class MultiHeadAttention(nn.Module):
         if mask is not None:
             assert mask.dim() == 3, \
                 f"mask must be 3D (batch_size, seq_len, seq_len), got shape {mask.shape}"
+            mask = mask.unsqueeze(1)  # (batch, 1, seq, seq) — broadcasts across all heads
 
-        batch_size = Q.shape[0]
-        seq_len = Q.shape[1]
-        d_model = Q.shape[2]
-        num_heads = self.num_heads
-        d_k = self.d_k
-        d_v = self.d_v
-        W_Q = self.W_Q(Q)
-        W_K = self.W_K(K)
-        W_V = self.W_V(V)
-
-        Q = W_Q.view(batch_size, seq_len, num_heads, d_k).transpose(1, 2)
-        K = W_K.view(batch_size, seq_len, num_heads, d_k).transpose(1, 2)
-        V = W_V.view(batch_size, seq_len, num_heads, d_v).transpose(1, 2)
+        Q = self._split_heads(self.W_Q(Q))
+        K = self._split_heads(self.W_K(K))
+        V = self._split_heads(self.W_V(V))
 
         output, attention_weights = scaled_dot_product_attention(Q, K, V, mask)
 
-        output = output.transpose(1, 2).contiguous().view(batch_size, seq_len, d_model)
-        output = self.W_O(output)
-        return output, attention_weights
+        return self.W_O(self._merge_heads(output)), attention_weights
     
     def _split_heads(self, x: torch.Tensor) -> torch.Tensor:
         """
@@ -112,12 +101,8 @@ class MultiHeadAttention(nn.Module):
         Args:
             x: Input tensor of shape (batch_size, seq_len, d_model)
         """
-        batch_size = x.shape[0]
-        seq_len = x.shape[1]
-        d_model = x.shape[2]
-        num_heads = self.num_heads
-        d_k = self.d_k
-        return x.view(batch_size, seq_len, num_heads, d_k).transpose(1, 2)
+        batch_size, seq_len, _ = x.shape
+        return x.view(batch_size, seq_len, self.num_heads, self.d_k).transpose(1, 2)
 
 
     def _merge_heads(self, x: torch.Tensor) -> torch.Tensor:
